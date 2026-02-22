@@ -2,6 +2,8 @@ package med.voll.api.domain.consulta;
 
 import jakarta.persistence.*;
 import lombok.*;
+import med.voll.api.domain.ValidacionException;
+import med.voll.api.domain.consulta.validaciones.cancelamiento.MotivoCancelamiento;
 import med.voll.api.domain.medico.Medico;
 import med.voll.api.domain.paciente.Paciente;
 
@@ -16,19 +18,54 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
 
+
 public class Consulta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_medico")
     private Medico medico;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_paciente")
     private Paciente paciente;
 
     private LocalDateTime fecha;
+    private Boolean cancelada = false;
+    private String motivoCancelamiento;
 
+    // Constructor vacío (requerido por JPA)
+    public Consulta() {}
 
+    // Constructor para reservas nuevas (no canceladas)
+    public Consulta(Long id, Medico medico, Paciente paciente, LocalDateTime fecha) {
+        this.id = id;
+        this.medico = medico;
+        this.paciente = paciente;
+        this.fecha = fecha;
+        this.cancelada = false; // por defecto
+        this.motivoCancelamiento = null; // por defecto
+    }
 
+    // Constructor completo (si alguna vez necesitás inicializar todo)
+    public Consulta(Long id, Medico medico, Paciente paciente, LocalDateTime fecha,
+                    Boolean cancelada, String motivoCancelamiento) {
+        this.id = id;
+        this.medico = medico;
+        this.paciente = paciente;
+        this.fecha = fecha;
+        this.cancelada = cancelada;
+        this.motivoCancelamiento = motivoCancelamiento;
+    }
+
+    // Método de negocio para cancelar
+    public void cancelar(MotivoCancelamiento motivo) {
+        if (motivo == null || motivo.motivo().isBlank()) {
+            throw new ValidacionException("El motivo de cancelación es obligatorio");
+        }
+        this.cancelada = true;
+        this.motivoCancelamiento = motivo.motivo();
+    }
 }

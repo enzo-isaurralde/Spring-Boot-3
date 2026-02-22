@@ -13,7 +13,7 @@ public class ValidadorMedicoConMismaConsultaMismoHorario implements ValidadorDeC
     private ConsultaRepository consultaRepository;
 
     public void validar(DatosReservaConsulta datos) {
-        var medicoTieneOtraMismaConsulta = consultaRepository.existsByMedicoIdAndFecha(datos.idMedico(), datos.fecha());
+        var medicoTieneOtraMismaConsulta = consultaRepository.existsByMedicoIdAndFechaAndMotivoCancelamientoIsNull(datos.idMedico(), datos.fecha());
         if (medicoTieneOtraMismaConsulta) {
             throw new RuntimeException("El médico ya tiene una consulta agendada para el mismo horario");
 

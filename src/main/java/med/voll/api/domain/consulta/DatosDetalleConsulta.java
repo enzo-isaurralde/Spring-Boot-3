@@ -2,8 +2,22 @@ package med.voll.api.domain.consulta;
 
 import java.time.LocalDateTime;
 
-public record DatosDetalleConsulta(Long id, Long idMedico, Long idPaciente, LocalDateTime fecha ) {
+public record DatosDetalleConsulta(
+        Long id,
+        Long idMedico,
+        Long idPaciente,
+        LocalDateTime fecha,
+        Boolean cancelada,
+        String motivoCancelamiento
+) {
     public DatosDetalleConsulta(Consulta consulta) {
-        this(consulta.getId(), consulta.getMedico().getId(),consulta.getPaciente().getId(),consulta.getFecha());
+        this(
+                consulta.getId(),
+                consulta.getMedico().getId(),
+                consulta.getPaciente().getId(),
+                consulta.getFecha(),
+                consulta.getCancelada(),
+                consulta.getMotivoCancelamiento()
+        );
     }
 }
