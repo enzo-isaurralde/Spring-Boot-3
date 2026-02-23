@@ -9,17 +9,15 @@ import med.voll.api.domain.paciente.Paciente;
 
 import java.time.LocalDateTime;
 
-
 @Table(name = "consultas")
 @Entity(name = "Consulta")
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@AllArgsConstructor   // ✅ genera constructor con todos los campos
+@NoArgsConstructor    // ✅ genera constructor vacío (requerido por JPA)
 @EqualsAndHashCode(of = "id")
-
-
 public class Consulta {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,10 +34,7 @@ public class Consulta {
     private Boolean cancelada = false;
     private String motivoCancelamiento;
 
-    // Constructor vacío (requerido por JPA)
-    public Consulta() {}
-
-    // Constructor para reservas nuevas (no canceladas)
+    // Constructor parcial para reservas nuevas (no canceladas)
     public Consulta(Long id, Medico medico, Paciente paciente, LocalDateTime fecha) {
         this.id = id;
         this.medico = medico;
@@ -47,17 +42,6 @@ public class Consulta {
         this.fecha = fecha;
         this.cancelada = false; // por defecto
         this.motivoCancelamiento = null; // por defecto
-    }
-
-    // Constructor completo (si alguna vez necesitás inicializar todo)
-    public Consulta(Long id, Medico medico, Paciente paciente, LocalDateTime fecha,
-                    Boolean cancelada, String motivoCancelamiento) {
-        this.id = id;
-        this.medico = medico;
-        this.paciente = paciente;
-        this.fecha = fecha;
-        this.cancelada = cancelada;
-        this.motivoCancelamiento = motivoCancelamiento;
     }
 
     // Método de negocio para cancelar
