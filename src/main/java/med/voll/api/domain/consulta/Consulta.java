@@ -23,11 +23,11 @@ public class Consulta {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_medico")
+    @JoinColumn(name = "medico_id")
     private Medico medico;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_paciente")
+    @JoinColumn(name = "paciente_id")
     private Paciente paciente;
 
     private LocalDateTime fecha;
@@ -44,7 +44,7 @@ public class Consulta {
         this.motivoCancelamiento = null; // por defecto
     }
 
-    // Método de negocio para cancelar
+    // Metodo de negocio para cancelar
     public void cancelar(MotivoCancelamiento motivo) {
         if (motivo == null || motivo.motivo().isBlank()) {
             throw new ValidacionException("El motivo de cancelación es obligatorio");
